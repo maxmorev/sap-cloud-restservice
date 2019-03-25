@@ -1,0 +1,284 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>ru.maxmorev</groupId>
+	<artifactId>restful-service-sap</artifactId>
+	<version>0.1</version>
+	<packaging>war</packaging>
+	<name>restful-service-sap</name>
+	<description>Sample Java REST service for SAP Cloud Platfrom</description>
+
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.1.3.RELEASE</version>
+	</parent>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<java.version>1.8</java.version>
+		<maven.compiler.source>1.8</maven.compiler.source>
+   		<maven.compiler.target>1.8</maven.compiler.target>
+	</properties>
+
+	<profiles>
+		<!-- Used to run the app on the local machine as standalone application -->
+
+		<profile>
+			<id>dev</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<dependencies>
+			
+				<!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
+				<dependency>
+				    <groupId>com.google.code.gson</groupId>
+				    <artifactId>gson</artifactId>
+				    <version>2.8.5</version>
+				</dependency>
+				
+				
+				<dependency>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-web</artifactId>
+				</dependency>
+				
+				<dependency>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-data-rest</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-data-jpa</artifactId>
+                    
+                </dependency>
+				
+				 <dependency>
+                    <groupId>com.h2database</groupId>
+                    <artifactId>h2</artifactId>
+                    <scope>runtime</scope>
+                </dependency>
+				
+			</dependencies>
+		</profile>
+
+		<!-- Used to run the app on SAP Cloud Platform in a Tomcat 8 -->
+		<profile>
+			<id>sapcloud</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<dependencies>
+				
+				<!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
+				<dependency>
+				    <groupId>com.google.code.gson</groupId>
+				    <artifactId>gson</artifactId>
+				    <version>2.8.5</version>
+				</dependency>
+		
+				<dependency>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-web</artifactId>
+					<version>2.1.3.RELEASE</version>
+					<exclusions>
+                        <exclusion>
+                            <groupId>org.springframework.boot</groupId>
+                            <artifactId>spring-boot-starter-tomcat</artifactId>
+                        </exclusion>
+                        <exclusion>
+                            <groupId>org.apache.tomcat.embed</groupId>
+                            <artifactId>tomcat-embed-el</artifactId>
+                        </exclusion>
+                        <!-- Exclude logback and SpringBoot logging, otherwise the app won't start on SAP Cloud Platform -->
+                        <exclusion>
+                            <groupId>ch.qos.logback</groupId>
+                             <artifactId>logback-classic</artifactId>
+                        </exclusion>
+                        <exclusion>
+                            <groupId>org.springframework.boot</groupId>
+                            <artifactId>spring-boot-starter-logging</artifactId>
+                        </exclusion>
+                        <exclusion>
+                        <groupId>org.slf4j</groupId>
+                		<artifactId>jul-to-slf4j</artifactId>
+                		</exclusion>
+                		 <exclusion>
+                        	<groupId>org.slf4j</groupId>
+                			<artifactId>slf4j-api</artifactId>
+                		</exclusion>
+                		<exclusion>
+                			<groupId>log4j</groupId>
+                             <artifactId>log4j</artifactId>
+                        </exclusion>
+                      
+                        
+					</exclusions>
+				</dependency>
+				<!-- h2 -->
+                <!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
+                <dependency>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-data-jpa</artifactId>
+                    <version>2.1.3.RELEASE</version>
+                   <exclusions>
+                        <exclusion>
+                            <groupId>org.springframework.boot</groupId>
+                            <artifactId>spring-boot-starter-tomcat</artifactId>
+                        </exclusion>
+                        <exclusion>
+                            <groupId>org.apache.tomcat.embed</groupId>
+                            <artifactId>tomcat-embed-el</artifactId>
+                        </exclusion>
+                        <!-- Exclude logback and SpringBoot logging, otherwise the app won't start on SAP Cloud Platform -->
+                        <exclusion>
+                            <artifactId>logback-classic</artifactId>
+                            <groupId>ch.qos.logback</groupId>
+                        </exclusion>
+                        <exclusion>
+                            <groupId>org.springframework.boot</groupId>
+                            <artifactId>spring-boot-starter-logging</artifactId>
+                        </exclusion>
+                        <exclusion>
+                        <groupId>org.slf4j</groupId>
+                		<artifactId>jul-to-slf4j</artifactId>
+                		</exclusion>
+                		 <exclusion>
+                        	<groupId>org.slf4j</groupId>
+                			<artifactId>slf4j-api</artifactId>
+                		</exclusion>
+                		<exclusion>
+                			<groupId>log4j</groupId>
+                             <artifactId>log4j</artifactId>
+                        </exclusion>
+                       
+                        
+					</exclusions>
+                </dependency>
+                
+                <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-rest -->
+                <dependency>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-data-rest</artifactId>
+                    <version>2.1.3.RELEASE</version>
+                   <exclusions>
+                        <exclusion>
+                            <groupId>org.springframework.boot</groupId>
+                            <artifactId>spring-boot-starter-tomcat</artifactId>
+                        </exclusion>
+                        <exclusion>
+                            <groupId>org.apache.tomcat.embed</groupId>
+                            <artifactId>tomcat-embed-el</artifactId>
+                        </exclusion>
+                        <!-- Exclude logback and SpringBoot logging, otherwise the app won't start on SAP Cloud Platform -->
+                        <exclusion>
+                            <artifactId>logback-classic</artifactId>
+                            <groupId>ch.qos.logback</groupId>
+                        </exclusion>
+                        <exclusion>
+                            <groupId>org.springframework.boot</groupId>
+                            <artifactId>spring-boot-starter-logging</artifactId>
+                        </exclusion>
+                        <exclusion>
+                        <groupId>org.slf4j</groupId>
+                		<artifactId>jul-to-slf4j</artifactId>
+                		</exclusion>
+                		 <exclusion>
+                        	<groupId>org.slf4j</groupId>
+                			<artifactId>slf4j-api</artifactId>
+                		</exclusion>
+                		<exclusion>
+                			<groupId>log4j</groupId>
+                             <artifactId>log4j</artifactId>
+                        </exclusion>
+                       
+                        
+					</exclusions>
+                </dependency>
+           
+                <dependency>
+                    <groupId>com.h2database</groupId>
+                    <artifactId>h2</artifactId>
+                    <scope>runtime</scope>
+                    <version>1.4.199</version>
+                    <exclusions>
+                        <exclusion>
+                            <groupId>org.springframework.boot</groupId>
+                            <artifactId>spring-boot-starter-tomcat</artifactId>
+                        </exclusion>
+                        <exclusion>
+                            <groupId>org.apache.tomcat.embed</groupId>
+                            <artifactId>tomcat-embed-el</artifactId>
+                        </exclusion>
+                        <!-- Exclude logback and SpringBoot logging, otherwise the app won't start on SAP Cloud Platform -->
+                        <exclusion>
+                        	<groupId>ch.qos.logback</groupId>
+                            <artifactId>logback-classic</artifactId>
+                        </exclusion>
+                        <exclusion>
+                            <groupId>org.springframework.boot</groupId>
+                            <artifactId>spring-boot-starter-logging</artifactId>
+                        </exclusion>
+                        <exclusion>
+                        <groupId>org.slf4j</groupId>
+                		<artifactId>jul-to-slf4j</artifactId>
+                		</exclusion>
+                		 <exclusion>
+                			<groupId>log4j</groupId>
+                             <artifactId>log4j</artifactId>
+                        </exclusion>
+                        
+                		
+                        
+					</exclusions>
+                    
+                </dependency>
+                
+                <!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
+				<dependency>
+				    <groupId>javax.servlet</groupId>
+				    <artifactId>javax.servlet-api</artifactId>
+				    <version>4.0.1</version>
+				    <scope>provided	</scope>
+				    
+				</dependency>
+                
+				
+			</dependencies>
+		</profile>
+	</profiles>
+
+	<build>
+		
+	<plugins>
+      <plugin>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>3.2.2</version>
+        <configuration>
+         <source>1.8</source>
+         <target>1.8</target>
+         <failOnMissingWebXml>false</failOnMissingWebXml>
+          <!--
+            Exclude JCL and LOG4J since all logging should go through SLF4J.
+            Note that we're excluding log4j-<version>.jar but keeping
+            log4j-over-slf4j-<version>.jar
+          -->
+          <packagingExcludes>
+          	META-INF/maven/*,
+            WEB-INF/lib/javax.servlet*.jar,
+            WEB-INF/lib-provided
+          </packagingExcludes>
+        </configuration>
+      </plugin>
+    </plugins>
+        
+	</build>
+
+	<url>https://github.com/maxmorev</url>
+
+
+
+</project>
