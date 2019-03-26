@@ -13,7 +13,13 @@ import javax.servlet.http.HttpServletRequest;
 public class GlobalDefaultExceptionHandler {
 
     public static final String DEFAULT_ERROR_VIEW = "error";
-
+    
+    /**
+     * Global exception handler of the REST controller 
+     * @param req
+     * @param ex
+     * @return error message
+     */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(value = Exception.class)
     @ResponseBody ErrorInfo
