@@ -44,8 +44,9 @@ public class TemperatureController {
     {
     	if(cityName.trim().isEmpty()) {
     		throw new IllegalArgumentException("Parameter cityName must be not empty");
-    	}	
-        if(cityName.replaceAll("[^\\p{L}]+", " ").trim().length()==0){
+    	}
+   
+        if( !cityName.chars().allMatch(Character::isLetter) ){ //if cityName contains wrong symbols
         	throw new IllegalArgumentException("Incorrect content of parameter cityName");
         }
     	
