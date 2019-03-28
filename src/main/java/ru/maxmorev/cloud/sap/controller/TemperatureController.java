@@ -2,16 +2,9 @@ package ru.maxmorev.cloud.sap.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
-
+import org.springframework.web.bind.annotation.*;
 import ru.maxmorev.cloud.sap.entity.CityTemperature;
 import ru.maxmorev.cloud.sap.repository.CityTemperatureRepository;
-import ru.maxmorev.cloud.sap.request.TemperatureRequest;
 import ru.maxmorev.cloud.sap.response.TemparatureResponse;
 import ru.maxmorev.cloud.sap.service.OpenweatherTemperatureProvider;
 import ru.maxmorev.cloud.sap.service.TemperatureProvider;
@@ -21,9 +14,8 @@ public class TemperatureController {
 
     @Autowired
     CityTemperatureRepository cityTemperatureRepository;
-
-    TemperatureProvider temperatureProvider = new OpenweatherTemperatureProvider();
-    
+    @Autowired
+    TemperatureProvider temperatureProvider;
     /**
      * takes the name of the city and as a result returns (by a synchronous answer) the current temperature in the transferred city.
      * The received data is saved in in-memory db H2. 
