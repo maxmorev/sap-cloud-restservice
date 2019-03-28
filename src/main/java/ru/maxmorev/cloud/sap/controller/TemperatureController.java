@@ -13,21 +13,16 @@ import ru.maxmorev.cloud.sap.entity.CityTemperature;
 import ru.maxmorev.cloud.sap.repository.CityTemperatureRepository;
 import ru.maxmorev.cloud.sap.request.TemperatureRequest;
 import ru.maxmorev.cloud.sap.response.TemparatureResponse;
+import ru.maxmorev.cloud.sap.service.OpenweatherTemperatureProvider;
+import ru.maxmorev.cloud.sap.service.TemperatureProvider;
 
 @RestController
 public class TemperatureController {
-	
-	 //private static final Logger log = LoggerFactory.getLogger(TemperatureController.class);
-
-    //http://api.openweathermap.org/data/2.5/weather?q=Moscow&APPID=82005a68994fa324046a7c4fb9006359
-    private static final String API_URL = "http://api.openweathermap.org/data/2.5/weather?q=";
-    private static final String API_KEY = "&APPID=82005a68994fa324046a7c4fb9006359";
-    private static final String API_METRICS_CELSIUS = "&units=metric";
-
-    private static final RestTemplate restTemplate = new RestTemplate();
 
     @Autowired
     CityTemperatureRepository cityTemperatureRepository;
+
+    TemperatureProvider temperatureProvider = new OpenweatherTemperatureProvider();
     
     /**
      * takes the name of the city and as a result returns (by a synchronous answer) the current temperature in the transferred city.
@@ -55,16 +50,12 @@ public class TemperatureController {
 
 
         if(cityTempPresent==null) {
-            StringBuilder apiOpenweatherRequest = new StringBuilder(TemperatureController.API_URL);
-            apiOpenweatherRequest
-                    .append(cityName)
-                    .append(TemperatureController.API_METRICS_CELSIUS)
-                    .append(TemperatureController.API_KEY);
-            TemperatureRequest temperatureRequest = restTemplate.getForObject(apiOpenweatherRequest.toString(), TemperatureRequest.class);
-            CityTemperature cityTemperature = new CityTemperature(cityName, temperatureRequest.getMain().getTemp());
+
+            float temperature = temperatureProvider.getTemperatureByCityName(cityName);
+            CityTemperature cityTemperature = new CityTemperature(cityName, temperature );
             cityTemperatureRepository.save(cityTemperature);
-            //log.info("SAVE cityTemperature " + cityTemperature);
-            return new TemparatureResponse( temperatureRequest.getMain().getTemp() );
+
+            return new TemparatureResponse( temperature );
         }else{
             //log.info("FOUND cityTemperature " + tempCheck);
             return  new TemparatureResponse(cityTempPresent.getTemperature());
