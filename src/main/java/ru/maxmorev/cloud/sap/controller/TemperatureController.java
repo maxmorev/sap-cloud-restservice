@@ -6,15 +6,14 @@ import org.springframework.web.bind.annotation.*;
 import ru.maxmorev.cloud.sap.entity.CityTemperature;
 import ru.maxmorev.cloud.sap.repository.CityTemperatureRepository;
 import ru.maxmorev.cloud.sap.response.TemparatureResponse;
-import ru.maxmorev.cloud.sap.service.OpenweatherTemperatureProvider;
 import ru.maxmorev.cloud.sap.service.TemperatureProvider;
 
 @RestController
 public class TemperatureController {
 
-    @Autowired
+    //@Autowired
     CityTemperatureRepository cityTemperatureRepository;
-    @Autowired
+    //@Autowired
     TemperatureProvider temperatureProvider;
     /**
      * takes the name of the city and as a result returns (by a synchronous answer) the current temperature in the transferred city.
@@ -64,8 +63,13 @@ public class TemperatureController {
     public String excludeAllOtherMethods() {
         return "405 Method Not Allowed";
     }
-    
 
-
-
+    @Autowired
+    public void setCityTemperatureRepository(CityTemperatureRepository cityTemperatureRepository) {
+        this.cityTemperatureRepository = cityTemperatureRepository;
+    }
+    @Autowired
+    public void setTemperatureProvider(TemperatureProvider temperatureProvider) {
+        this.temperatureProvider = temperatureProvider;
+    }
 }
