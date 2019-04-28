@@ -1,4 +1,5 @@
 # sap-cloud-restservice
+https://quickstartapplication-p2001211012trial.dispatcher.hanatrial.ondemand.com/webapp/index.html?hc_reset
 ========
 
 #### Build with Maven (linux)
