@@ -8,8 +8,14 @@ import ru.maxmorev.cloud.sap.repository.CityTemperatureRepository;
 import ru.maxmorev.cloud.sap.response.TemparatureResponse;
 import ru.maxmorev.cloud.sap.service.TemperatureProvider;
 
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Logger;
+
 @RestController
 public class TemperatureController {
+
+    private static final Logger logger = Logger.getLogger(TemperatureController.class.getName());
 
     //@Autowired
     CityTemperatureRepository cityTemperatureRepository;
@@ -48,8 +54,18 @@ public class TemperatureController {
 
             return new TemparatureResponse( temperature );
         }else{
-            //log.info("FOUND cityTemperature " + tempCheck);
-            return  new TemparatureResponse(cityTempPresent.getTemperature());
+
+            long difference = TimeUnit.MILLISECONDS.toMinutes( (new Date()).getTime()- cityTempPresent.getCreationDate().getTime());
+            logger.info("FOUND cityTemperature difference = " + difference);
+            if( difference > 10 ){
+                float temperature = temperatureProvider.getTemperatureByCityName(cityName);
+                cityTempPresent.setTemperature(temperature);
+                cityTempPresent.setCreationDate( new Date() );
+                cityTemperatureRepository.save(cityTempPresent);
+            }
+            TemparatureResponse temparatureResponse = new TemparatureResponse(cityTempPresent.getTemperature());
+            temparatureResponse.setDifference(difference);
+            return temparatureResponse;
         }
 
     }
